@@ -1,0 +1,5 @@
+scraper/.cookies.json
+scraper/__pycache__/
+scraper/.venv/
+*.pyc
+.DS_Store

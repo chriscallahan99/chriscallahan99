@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="45%" r="70%">
+      <stop offset="0%" stop-color="#e0d2a8"/>
+      <stop offset="100%" stop-color="#7a6840"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="8"/>
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0"/>
+      <feComposite in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <g opacity="0.9">
+    <text x="200" y="195" font-size="160" text-anchor="middle" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">🥖</text>
+  </g>
+  <rect width="400" height="300" fill="transparent" filter="url(#grain)"/>
+  <circle cx="72" cy="58" r="22" fill="white" opacity="0.22"/>
+  <rect x="0" y="252" width="400" height="48" fill="rgba(0,0,0,0.35)"/>
+  <text x="16" y="282" font-size="16" fill="#ffffff" font-family="system-ui, sans-serif" opacity="0.85">Portland, OR</text>
+</svg>

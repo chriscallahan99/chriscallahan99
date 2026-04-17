@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketguessr &mdash; Guess the Weird Marketplace Price</title>
+  <meta name="description" content="A Price Is Right-style game where you guess the asking price of genuinely weird Facebook Marketplace listings." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%B0%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <main id="app">
+
+    <header class="topbar">
+      <h1>Marketguessr</h1>
+      <div class="hud">
+        <span id="round-indicator" aria-live="polite">Round &mdash; / &mdash;</span>
+        <span id="score-indicator" aria-live="polite">Score: 0</span>
+      </div>
+    </header>
+
+    <section id="intro" class="screen">
+      <h2>How much would <em>you</em> pay for this nonsense?</h2>
+      <p>You&rsquo;ll see 10 genuinely weird Marketplace listings. Guess each price.
+      <strong>Price Is Right rules:</strong> closest without going over wins. Go over and you get zero.</p>
+      <button id="start-btn" type="button" class="primary">Start guessing</button>
+      <p class="fineprint">Images are placeholders unless someone has run the local scraper &mdash; see the repo README.</p>
+    </section>
+
+    <section id="round" class="screen hidden" aria-labelledby="listing-title">
+      <article class="listing">
+        <div class="listing-image-wrap">
+          <img id="listing-image" alt="" />
+        </div>
+        <div class="listing-body">
+          <h2 id="listing-title"></h2>
+          <p id="listing-location" class="meta"></p>
+          <p id="listing-description"></p>
+        </div>
+      </article>
+
+      <form id="guess-form" class="guess" autocomplete="off">
+        <label for="guess-input">Your guess (USD)</label>
+        <div class="guess-row">
+          <span class="dollar">$</span>
+          <input id="guess-input" type="number" inputmode="numeric" min="0" step="1" required />
+          <button type="submit" class="primary">Lock it in</button>
+        </div>
+      </form>
+
+      <div id="reveal" class="reveal hidden" aria-live="polite">
+        <p class="reveal-actual">Actual price: <strong id="actual-price"></strong></p>
+        <p id="reveal-verdict" class="reveal-verdict"></p>
+        <p class="reveal-points">Round points: <strong id="round-points"></strong></p>
+        <button id="next-btn" type="button" class="primary">Next listing &rarr;</button>
+      </div>
+    </section>
+
+    <section id="gameover" class="screen hidden">
+      <h2>Final score</h2>
+      <p class="final-score"><strong id="final-score">0</strong> <span>/ <span id="final-max"></span></span></p>
+      <p id="final-grade" class="grade"></p>
+      <ul id="final-breakdown" class="breakdown"></ul>
+      <button id="restart-btn" type="button" class="primary">Play again</button>
+    </section>
+
+    <footer>
+      <p>Built for fun. Not affiliated with Facebook or <em>The Price Is Right</em>.</p>
+    </footer>
+  </main>
+
+  <script src="js/game.js"></script>
+</body>
+</html>
