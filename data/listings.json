@@ -1,0 +1,272 @@
+[
+  {
+    "id": "seed-001",
+    "image": "assets/listings/seed-001.svg",
+    "title": "Haunted porcelain clown doll",
+    "description": "Belonged to grandma. Eyes follow you across the room. No refunds.",
+    "price": 450,
+    "location": "Tampa, FL",
+    "source": "seed"
+  },
+  {
+    "id": "seed-002",
+    "image": "assets/listings/seed-002.svg",
+    "title": "Used toilet (slightly)",
+    "description": "Works fine. You pick up. No lowballers I know what I have.",
+    "price": 25,
+    "location": "Bakersfield, CA",
+    "source": "seed"
+  },
+  {
+    "id": "seed-003",
+    "image": "assets/listings/seed-003.svg",
+    "title": "Taxidermy squirrel holding tiny beer",
+    "description": "Handcrafted. Beer is actually a thimble. Very cute.",
+    "price": 180,
+    "location": "Ypsilanti, MI",
+    "source": "seed"
+  },
+  {
+    "id": "seed-004",
+    "image": "assets/listings/seed-004.svg",
+    "title": "Anime body pillow of Guy Fieri",
+    "description": "Welcome to Flavortown. Dakimakura, full length.",
+    "price": 85,
+    "location": "Columbus, OH",
+    "source": "seed"
+  },
+  {
+    "id": "seed-005",
+    "image": "assets/listings/seed-005.svg",
+    "title": "Full suit of knight armor (no helmet)",
+    "description": "Found in a basement. Fits someone 5'10\". Slight rust.",
+    "price": 1200,
+    "location": "Albany, NY",
+    "source": "seed"
+  },
+  {
+    "id": "seed-006",
+    "image": "assets/listings/seed-006.svg",
+    "title": "1995 elliptical, smells like ham",
+    "description": "Works perfect. Smells weird. You haul.",
+    "price": 40,
+    "location": "Scranton, PA",
+    "source": "seed"
+  },
+  {
+    "id": "seed-007",
+    "image": "assets/listings/seed-007.svg",
+    "title": "Dogs-playing-poker painting (original??)",
+    "description": "Pretty sure it's real. Oil on canvas. Bidding encouraged.",
+    "price": 150,
+    "location": "Fort Wayne, IN",
+    "source": "seed"
+  },
+  {
+    "id": "seed-008",
+    "image": "assets/listings/seed-008.svg",
+    "title": "Deep freezer full of sourdough starter",
+    "description": "20 years old. Mother of them all. Takes the whole freezer.",
+    "price": 75,
+    "location": "Portland, OR",
+    "source": "seed"
+  },
+  {
+    "id": "seed-009",
+    "image": "assets/listings/seed-009.svg",
+    "title": "Life-size cardboard cutout of Gary Busey",
+    "description": "Startles my wife every morning. She wants it gone.",
+    "price": 60,
+    "location": "Tulsa, OK",
+    "source": "seed"
+  },
+  {
+    "id": "seed-010",
+    "image": "assets/listings/seed-010.svg",
+    "title": "Giant porcelain rooster, 4 feet tall",
+    "description": "Doesn't crow. Mostly intact. Crack in comb.",
+    "price": 220,
+    "location": "Atlanta, GA",
+    "source": "seed"
+  },
+  {
+    "id": "seed-011",
+    "image": "assets/listings/seed-011.svg",
+    "title": "Single shoe, left foot, size 13",
+    "description": "Found it. Clean. Leather.",
+    "price": 15,
+    "location": "Reno, NV",
+    "source": "seed"
+  },
+  {
+    "id": "seed-012",
+    "image": "assets/listings/seed-012.svg",
+    "title": "Vintage dentist chair, minor stains",
+    "description": "Hydraulics work. Perfect for Halloween party.",
+    "price": 350,
+    "location": "Phoenix, AZ",
+    "source": "seed"
+  },
+  {
+    "id": "seed-013",
+    "image": "assets/listings/seed-013.svg",
+    "title": "Bag of buttons (3000+)",
+    "description": "Estate sale find. All shapes, sizes, eras. Heavy.",
+    "price": 20,
+    "location": "St. Louis, MO",
+    "source": "seed"
+  },
+  {
+    "id": "seed-014",
+    "image": "assets/listings/seed-014.svg",
+    "title": "Homemade throne from PVC pipe",
+    "description": "Spray-painted gold. Sturdy. Fits king-sized behind.",
+    "price": 500,
+    "location": "Orlando, FL",
+    "source": "seed"
+  },
+  {
+    "id": "seed-015",
+    "image": "assets/listings/seed-015.svg",
+    "title": "Used CPAP machine, slight mildew",
+    "description": "Works. Probably wash the hose. No warranty.",
+    "price": 50,
+    "location": "Topeka, KS",
+    "source": "seed"
+  },
+  {
+    "id": "seed-016",
+    "image": "assets/listings/seed-016.svg",
+    "title": "Cursed velvet Elvis painting",
+    "description": "Eyes glow in moonlight. Not joking. $110 or trade for guns.",
+    "price": 110,
+    "location": "Memphis, TN",
+    "source": "seed"
+  },
+  {
+    "id": "seed-017",
+    "image": "assets/listings/seed-017.svg",
+    "title": "Massive hand-carved wizard statue",
+    "description": "6 feet tall. Solid wood. Smells vaguely of patchouli.",
+    "price": 900,
+    "location": "Asheville, NC",
+    "source": "seed"
+  },
+  {
+    "id": "seed-018",
+    "image": "assets/listings/seed-018.svg",
+    "title": "400 VHS tapes, mostly Shrek",
+    "description": "Every Shrek plus bonuses. Cases included. Pickup only.",
+    "price": 100,
+    "location": "Boise, ID",
+    "source": "seed"
+  },
+  {
+    "id": "seed-019",
+    "image": "assets/listings/seed-019.svg",
+    "title": "Giant inflatable leg, unclear purpose",
+    "description": "Was at a car dealership I think. Blower included.",
+    "price": 45,
+    "location": "Wichita, KS",
+    "source": "seed"
+  },
+  {
+    "id": "seed-020",
+    "image": "assets/listings/seed-020.svg",
+    "title": "Very angry garden gnome",
+    "description": "Glare is startling. Made of concrete. 40 lbs.",
+    "price": 35,
+    "location": "Eugene, OR",
+    "source": "seed"
+  },
+  {
+    "id": "seed-021",
+    "image": "assets/listings/seed-021.svg",
+    "title": "Porcelain cat army (47 cats)",
+    "description": "Must take all. No splitting the army. They are a family.",
+    "price": 250,
+    "location": "Des Moines, IA",
+    "source": "seed"
+  },
+  {
+    "id": "seed-022",
+    "image": "assets/listings/seed-022.svg",
+    "title": "Slightly melted Tupperware set",
+    "description": "Dishwasher accident. Still seals. Mostly.",
+    "price": 12,
+    "location": "Flint, MI",
+    "source": "seed"
+  },
+  {
+    "id": "seed-023",
+    "image": "assets/listings/seed-023.svg",
+    "title": "Handmade mannequin wedding dress",
+    "description": "Mannequin included. Long story. Don't ask.",
+    "price": 700,
+    "location": "Lubbock, TX",
+    "source": "seed"
+  },
+  {
+    "id": "seed-024",
+    "image": "assets/listings/seed-024.svg",
+    "title": "Mystery jar labeled 'DO NOT OPEN'",
+    "description": "Found in late uncle's shed. Heavy. Sloshes.",
+    "price": 5,
+    "location": "Bangor, ME",
+    "source": "seed"
+  },
+  {
+    "id": "seed-025",
+    "image": "assets/listings/seed-025.svg",
+    "title": "Antique iron lung",
+    "description": "Non-functional. Great conversation piece. Weighs 600 lbs.",
+    "price": 1800,
+    "location": "Cleveland, OH",
+    "source": "seed"
+  },
+  {
+    "id": "seed-026",
+    "image": "assets/listings/seed-026.svg",
+    "title": "Chandelier made from forks",
+    "description": "300+ forks welded together. Lights up. Dangerous.",
+    "price": 275,
+    "location": "Brooklyn, NY",
+    "source": "seed"
+  },
+  {
+    "id": "seed-027",
+    "image": "assets/listings/seed-027.svg",
+    "title": "Life-sized E.T. statue",
+    "description": "Was at a Blockbuster. One finger broken. Still phones home.",
+    "price": 650,
+    "location": "Tucson, AZ",
+    "source": "seed"
+  },
+  {
+    "id": "seed-028",
+    "image": "assets/listings/seed-028.svg",
+    "title": "Box of 'unused' wigs",
+    "description": "Different styles. Blonde, black, purple. All human hair (?).",
+    "price": 40,
+    "location": "Las Vegas, NV",
+    "source": "seed"
+  },
+  {
+    "id": "seed-029",
+    "image": "assets/listings/seed-029.svg",
+    "title": "Glass eye collection, mismatched",
+    "description": "37 eyes. None match. Stored in velvet case.",
+    "price": 90,
+    "location": "Providence, RI",
+    "source": "seed"
+  },
+  {
+    "id": "seed-030",
+    "image": "assets/listings/seed-030.svg",
+    "title": "1987 Buick, runs on prayer",
+    "description": "Starts 60% of the time. Has personality. Needs love.",
+    "price": 400,
+    "location": "Detroit, MI",
+    "source": "seed"
+  }
+]
