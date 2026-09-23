@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Priced Promo</title>
+  <meta name="description" content="An 8-second logo bumper for Priced. Loops in the browser; scripts/render_promo.js renders it to video." />
+  <link rel="preload" href="../fonts/bungee-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <style>
+    @font-face {
+      font-family: "Bungee";
+      font-weight: 400;
+      font-display: block;
+      src: url("../fonts/bungee-latin.woff2") format("woff2");
+    }
+
+    :root {
+      --show-font: "Bungee", Impact, "Arial Black", sans-serif;
+      --gold: #ffd23f;
+      --red: #ff4d5e;
+      --bulb-on: #fff4c2;
+      --bulb-off: #5a4715;
+      /* Where the logo sits; portrait moves it up a little. */
+      --logo-y: 34%;
+      --logo-size: min(14vw, 22vh);
+    }
+
+    @media (orientation: portrait) {
+      :root { --logo-y: 38%; --logo-size: 15.5vw; }
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+      font-family: var(--show-font);
+      color: #fff;
+    }
+
+    .layer { position: absolute; inset: 0; pointer-events: none; }
+
+    /* ---------- Background ---------- */
+
+    .bg {
+      background:
+        radial-gradient(60% 55% at 50% var(--logo-y), #9c1f47 0%, #5a0d30 45%, #230518 80%, #0d0209 100%);
+      clip-path: circle(0% at 50% var(--logo-y));
+      animation: iris 700ms cubic-bezier(0.7, 0, 0.2, 1) 250ms both;
+    }
+
+    .rays::before {
+      content: "";
+      position: absolute;
+      left: calc(50% - 125vmax);
+      top: calc(var(--logo-y) - 125vmax);
+      width: 250vmax;
+      height: 250vmax;
+      background: repeating-conic-gradient(from 0deg, rgba(255, 210, 63, 0.16) 0deg 7.5deg, transparent 7.5deg 15deg);
+      -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 20%, transparent 45%);
+      mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 20%, transparent 45%);
+      transform: scale(0);
+      animation: rays-in 900ms cubic-bezier(0.2, 0.9, 0.2, 1) 350ms both, rays-spin 8s linear 350ms both;
+    }
+
+    .spot {
+      position: absolute;
+      bottom: -10vh;
+      width: 120vmax;
+      height: 130vh;
+      margin-left: -60vmax;
+      background: conic-gradient(from -9deg at 50% 100%, rgba(255, 232, 170, 0) 0deg, rgba(255, 232, 170, 0.22) 6deg 12deg, rgba(255, 232, 170, 0) 18deg 360deg);
+      -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 95%);
+      mask-image: linear-gradient(to top, #000 10%, transparent 95%);
+      transform-origin: 50% 100%;
+      opacity: 0;
+    }
+
+    .spot.l { left: 10%; animation: spot-in 500ms ease-out 150ms both, sweep-l 2.6s ease-in-out 150ms infinite alternate; }
+    .spot.r { left: 90%; animation: spot-in 500ms ease-out 150ms both, sweep-r 2.9s ease-in-out 150ms infinite alternate; }
+
+    .vignette { background: radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.6) 100%); }
+
+    .flash { background: #fff; opacity: 0; mix-blend-mode: screen; animation: flash 380ms ease-out 1720ms; }
+    .flash.red { background: #ff2d4a; animation: flash-soft 500ms ease-out 6180ms; }
+
+    /* ---------- Camera: shakes and punch-ins on the beats ---------- */
+
+    .cam, .punch { position: absolute; inset: 0; }
+    .cam { animation: shake 360ms linear 1720ms, shake 360ms linear 6180ms; }
+    .punch {
+      transform-origin: 50% var(--logo-y);
+      animation:
+        punch 500ms cubic-bezier(0.2, 1.4, 0.4, 1) 1720ms,
+        punch 420ms cubic-bezier(0.2, 1.4, 0.4, 1) 5250ms,
+        drift 1.8s ease-out 6180ms forwards;
+    }
+
+    /* ---------- Logo ---------- */
+
+    .logo-wrap {
+      position: absolute;
+      left: 50%;
+      top: var(--logo-y);
+      font-size: var(--logo-size);
+      transform: translate(-50%, -50%);
+    }
+
+    .logo {
+      margin: 0;
+      display: flex;
+      font-weight: 400;
+      font-size: var(--logo-size);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .ltr {
+      position: relative;
+      display: inline-block;
+      transform-origin: 50% 70%;
+      opacity: 0;
+      animation: slam 460ms cubic-bezier(0.2, 0.8, 0.3, 1) calc(600ms + var(--i) * 140ms) both;
+    }
+
+    .ltr .ext {
+      position: absolute;
+      inset: 0;
+      color: #7a1020;
+      text-shadow:
+        0.01em 0.012em 0 #6a0d1b, 0.02em 0.024em 0 #6a0d1b,
+        0.03em 0.036em 0 #5c0b17, 0.04em 0.048em 0 #5c0b17,
+        0.05em 0.06em 0 #4e0913, 0.06em 0.072em 0 #4e0913,
+        0.08em 0.1em 0.16em rgba(0, 0, 0, 0.6);
+    }
+
+    .ltr .face {
+      position: relative;
+      display: block;
+      color: transparent;
+      background: linear-gradient(180deg, #fffbe6 0%, #ffe066 36%, #ffb703 62%, #fb8500 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .ltr .face::after {
+      content: attr(data-c);
+      position: absolute;
+      inset: 0;
+      color: transparent;
+      background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.95) 50%, transparent 62%);
+      background-size: 300% 100%;
+      background-position: 150% 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shine 900ms ease-in-out calc(2150ms + var(--i) * 60ms), shine 900ms ease-in-out calc(6900ms + var(--i) * 60ms);
+    }
+
+    /* A shockwave ring behind each letter as it lands. */
+    .ring {
+      position: absolute;
+      left: 50%;
+      top: 55%;
+      width: 1.2em;
+      height: 1.2em;
+      margin: -0.6em 0 0 -0.6em;
+      border-radius: 50%;
+      border: 0.06em solid var(--gold);
+      opacity: 0;
+      animation: ring 520ms ease-out calc(900ms + var(--i) * 140ms) both;
+    }
+
+    .ring.big {
+      width: 3em;
+      height: 3em;
+      margin: -1.5em 0 0 -1.5em;
+      left: 50%;
+      border-width: 0.04em;
+      animation: ring-big 800ms ease-out 1720ms, ring-big 800ms ease-out 5250ms;
+    }
+
+    /* ---------- Hanging price tag ---------- */
+
+    .tag {
+      position: absolute;
+      top: calc(100% - 0.06em);
+      left: 62%;
+      width: 1.3em;
+      margin-left: -0.65em;
+      font-size: calc(var(--logo-size) * 0.72);
+      transform-origin: 50% 0;
+      opacity: 0;
+      animation: tag-drop 1300ms ease-out 2050ms both, tag-flick 900ms ease-out 6700ms;
+    }
+
+    .tag-pin {
+      position: absolute;
+      top: -0.05em;
+      left: 50%;
+      width: 0.11em;
+      height: 0.11em;
+      margin-left: -0.055em;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff, #c9c9c9 45%, #6b6b6b);
+      z-index: 1;
+    }
+
+    .tag-string { display: block; width: 0.025em; height: 0.4em; margin: 0 auto; background: #e9dcc0; }
+
+    .tag-body { display: block; margin-top: -0.13em; filter: drop-shadow(0 0.08em 0.08em rgba(0, 0, 0, 0.5)); }
+
+    .tag-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 0.72em;
+      padding-top: 0.15em;
+      background: #fff6dc;
+      clip-path: polygon(50% 0, 100% 22%, 100% 100%, 0 100%, 0 22%);
+      color: #c1121f;
+      font-size: 1em;
+    }
+
+    .tag-card b { font-weight: 400; font-size: 0.24em; }
+
+    .tag-hole {
+      position: absolute;
+      top: 0.08em;
+      left: 50%;
+      width: 0.11em;
+      height: 0.11em;
+      margin-left: -0.055em;
+      border-radius: 50%;
+      background: #230518;
+      box-shadow: 0 0 0 0.02em #e8d7ad;
+    }
+
+    /* ---------- Weird listings popping in around the logo ---------- */
+
+    .item {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: 0;
+      height: 0;
+    }
+
+    .item-inner {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform: translate(-50%, -50%) scale(0);
+      animation:
+        pop-in 520ms cubic-bezier(0.2, 1.5, 0.4, 1) var(--in) both,
+        pop-out 300ms cubic-bezier(0.6, 0, 0.8, 0.4) var(--out) forwards;
+    }
+
+    .card {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 15vmin;
+      height: 15vmin;
+      border-radius: 2.2vmin;
+      background: #fff8ea;
+      box-shadow: 0 1.2vmin 2.4vmin rgba(0, 0, 0, 0.45), inset 0 0 0 0.6vmin #fff;
+      transform: rotate(var(--rot));
+      font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+      font-size: 9vmin;
+      line-height: 1;
+    }
+
+    .sticker {
+      position: absolute;
+      right: -3.2vmin;
+      bottom: -2.4vmin;
+      padding: 1vmin 1.4vmin 0.7vmin;
+      border-radius: 1.2vmin;
+      background: var(--gold);
+      color: #b3101c;
+      font-family: var(--show-font);
+      font-size: 3.4vmin;
+      line-height: 1;
+      box-shadow: 0 0.5vmin 0 #b37a00, 0 0.8vmin 1.6vmin rgba(0, 0, 0, 0.4);
+      transform: rotate(8deg) scale(0);
+      animation: sticker 380ms cubic-bezier(0.2, 1.8, 0.4, 1) calc(var(--in) + 220ms) both;
+    }
+
+    /* ---------- Tagline + stamp ---------- */
+
+    .tagline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 69%;
+      display: flex;
+      justify-content: center;
+      gap: 0.35em;
+      font-size: min(6.2vw, 9vh);
+      line-height: 1;
+      color: #fff;
+      text-shadow: 0 0.06em 0 #7a1020, 0 0.12em 0.3em rgba(0, 0, 0, 0.6);
+    }
+
+    .tagline .w { display: inline-block; transform: scale(0); animation: word 420ms cubic-bezier(0.2, 1.7, 0.4, 1) calc(5500ms + var(--i) * 140ms) both; }
+
+    .stamp {
+      position: absolute;
+      left: 50%;
+      top: 88%;
+      padding: 0.2em 0.5em 0.12em;
+      border: 0.12em solid currentColor;
+      border-radius: 0.25em;
+      color: var(--red);
+      background: rgba(20, 4, 12, 0.7);
+      font-size: min(4.6vw, 6.4vh);
+      line-height: 1;
+      white-space: nowrap;
+      text-shadow: 0 0 0.4em currentColor;
+      box-shadow: 0 0 0.6em -0.1em currentColor, inset 0 0 0.4em -0.1em currentColor;
+      transform: translate(-50%, -50%) rotate(-6deg) scale(0);
+      animation: stamp 480ms cubic-bezier(0.2, 1.5, 0.4, 1) 6180ms both;
+    }
+
+    @media (orientation: portrait) {
+      .tagline { top: 55%; flex-direction: column; align-items: center; gap: 0.12em; font-size: 12vw; }
+      .stamp { top: 87%; font-size: 7vw; }
+    }
+
+    /* ---------- Marquee bulbs around the frame ---------- */
+
+    .bulb {
+      position: absolute;
+      width: 1.5vmin;
+      height: 1.5vmin;
+      margin: -0.75vmin 0 0 -0.75vmin;
+      border-radius: 50%;
+      background: var(--bulb-off);
+      opacity: 0;
+      animation:
+        bulb-on 260ms ease-out calc(1720ms + var(--i) / var(--n) * 500ms) both,
+        chase 540ms steps(1, end) calc(2400ms + var(--k) * 180ms) infinite;
+    }
+
+    #fx { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    /* ---------- Keyframes ---------- */
+
+    @keyframes iris { to { clip-path: circle(150% at 50% var(--logo-y)); } }
+    @keyframes rays-in { from { transform: scale(0) rotate(-40deg); } to { transform: scale(1) rotate(0deg); } }
+    @keyframes rays-spin { to { rotate: 60deg; } }
+    @keyframes spot-in { to { opacity: 1; } }
+    @keyframes sweep-l { from { transform: rotate(4deg); } to { transform: rotate(40deg); } }
+    @keyframes sweep-r { from { transform: rotate(-4deg); } to { transform: rotate(-40deg); } }
+    @keyframes flash { 0% { opacity: 0.6; } 100% { opacity: 0; } }
+    @keyframes flash-soft { 0% { opacity: 0.25; } 100% { opacity: 0; } }
+
+    @keyframes shake {
+      0%, 100% { transform: none; }
+      12% { transform: translate(-1.6vmin, 1vmin) rotate(-0.6deg); }
+      25% { transform: translate(1.4vmin, -1.2vmin) rotate(0.5deg); }
+      38% { transform: translate(-1.1vmin, -0.6vmin); }
+      52% { transform: translate(0.9vmin, 0.8vmin) rotate(-0.3deg); }
+      68% { transform: translate(-0.5vmin, 0.3vmin); }
+      84% { transform: translate(0.3vmin, -0.2vmin); }
+    }
+
+    @keyframes punch { 0% { transform: scale(1); } 30% { transform: scale(1.07); } 100% { transform: scale(1); } }
+    @keyframes drift { from { transform: scale(1); } to { transform: scale(1.04); } }
+
+    @keyframes slam {
+      0% { opacity: 0; transform: scale(4.2) rotate(calc(var(--r) * 2)); filter: blur(0.06em); }
+      45% { opacity: 1; filter: blur(0); }
+      62% { transform: scale(0.82, 0.86) rotate(0deg); }
+      80% { transform: scale(1.1) rotate(calc(var(--r) * -0.3)); }
+      100% { opacity: 1; transform: none; }
+    }
+
+    @keyframes ring {
+      0% { opacity: 0.9; transform: scale(0.2); }
+      100% { opacity: 0; transform: scale(2.4); }
+    }
+
+    @keyframes ring-big {
+      0% { opacity: 1; transform: scale(0.1); }
+      100% { opacity: 0; transform: scale(2.6); }
+    }
+
+    @keyframes shine { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+
+    @keyframes tag-drop {
+      0% { opacity: 0; transform: translateY(-0.5em) rotate(0deg) scaleY(0.6); }
+      20% { opacity: 1; transform: translateY(0) rotate(0deg) scaleY(1.05); }
+      36% { transform: rotate(22deg); }
+      52% { transform: rotate(-15deg); }
+      68% { transform: rotate(8deg); }
+      84% { transform: rotate(-9deg); }
+      100% { opacity: 1; transform: rotate(-6deg); }
+    }
+
+    @keyframes tag-flick {
+      0% { opacity: 1; transform: rotate(-6deg); }
+      18% { transform: rotate(26deg); }
+      40% { transform: rotate(-16deg); }
+      62% { transform: rotate(8deg); }
+      100% { opacity: 1; transform: rotate(-6deg); }
+    }
+
+    @keyframes pop-in {
+      0% { transform: translate(-50%, -50%) scale(0) rotate(-40deg); }
+      60% { transform: translate(-50%, -50%) scale(1.25) rotate(6deg); }
+      80% { transform: translate(-50%, -50%) scale(0.92) rotate(-2deg); }
+      100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    }
+
+    @keyframes pop-out {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      35% { transform: translate(-50%, -50%) scale(1.3); }
+      100% { transform: translate(-50%, -50%) scale(0) rotate(30deg); }
+    }
+
+    @keyframes sticker {
+      from { transform: rotate(-30deg) scale(0); }
+      to { transform: rotate(8deg) scale(1); }
+    }
+
+    @keyframes word {
+      0% { transform: scale(0) rotate(-12deg); }
+      60% { transform: scale(1.3) rotate(3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    @keyframes stamp {
+      0% { transform: translate(-50%, -50%) rotate(-24deg) scale(3.2); opacity: 0; }
+      55% { transform: translate(-50%, -50%) rotate(-4deg) scale(0.9); opacity: 1; }
+      100% { transform: translate(-50%, -50%) rotate(-6deg) scale(1); opacity: 1; }
+    }
+
+    @keyframes bulb-on {
+      0% { opacity: 0; transform: scale(0.3); }
+      60% { opacity: 1; transform: scale(1.6); background: #fff; box-shadow: 0 0 1.4vmin 0.5vmin var(--gold); }
+      100% { opacity: 1; transform: scale(1); background: var(--bulb-on); box-shadow: 0 0 0.8vmin 0.2vmin var(--gold); }
+    }
+
+    @keyframes chase {
+      0% { opacity: 1; background: var(--bulb-on); box-shadow: 0 0 0.8vmin 0.2vmin var(--gold), 0 0 2vmin 0.6vmin rgba(255, 210, 63, 0.5); }
+      66.666%, 100% { opacity: 1; background: var(--bulb-off); box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div class="layer bg"></div>
+    <div class="layer rays"></div>
+    <div class="layer"><span class="spot l"></span><span class="spot r"></span></div>
+
+    <div class="cam">
+      <div class="punch">
+        <div class="layer" id="items"></div>
+        <div class="logo-wrap">
+          <h1 class="logo" id="logo" aria-label="Priced"></h1>
+          <div class="tag">
+            <span class="tag-pin"></span>
+            <span class="tag-string"></span>
+            <span class="tag-body"><span class="tag-card"><span class="tag-hole"></span><b id="tag-price">$???</b></span></span>
+          </div>
+        </div>
+        <div class="tagline" aria-label="Guess the price.">
+          <span class="w" style="--i:0">GUESS</span><span class="w" style="--i:1">THE</span><span class="w" style="--i:2">PRICE.</span>
+        </div>
+        <div class="stamp">DON'T GO OVER!</div>
+      </div>
+    </div>
+
+    <div class="layer" id="bulbs"></div>
+    <canvas id="fx"></canvas>
+    <div class="layer flash"></div>
+    <div class="layer flash red"></div>
+    <div class="layer vignette"></div>
+  </div>
+
+  <script>
+    (() => {
+      const DURATION = 8000;
+      const stage = document.getElementById('stage');
+      const W = () => stage.clientWidth;
+      const H = () => stage.clientHeight;
+      const portrait = matchMedia('(orientation: portrait)').matches;
+
+      // ---------- Build the logo ----------
+      const logo = document.getElementById('logo');
+      [...'PRICED'].forEach((ch, i) => {
+        const l = document.createElement('span');
+        l.className = 'ltr';
+        l.style.setProperty('--i', i);
+        l.style.setProperty('--r', (i % 2 ? 1 : -1) * (8 + ((i * 5) % 9)) + 'deg');
+        l.innerHTML = `<span class="ring"></span><span class="ext">${ch}</span><span class="face" data-c="${ch}">${ch}</span>`;
+        logo.append(l);
+      });
+      const big = document.createElement('span');
+      big.className = 'ring big';
+      logo.parentElement.prepend(big);
+
+      // ---------- Weird listings (from the seed data) ----------
+      const ITEMS = [
+        ['🤡', '$450'], ['🚽', '$25'], ['🐿️', '$180'], ['🧙', '$900'],
+        ['🛡️', '$1,200'], ['📼', '$100'], ['🦷', '$350'], ['🐓', '$220'],
+      ];
+      const SPOTS = portrait
+        ? [[20, 11], [80, 13], [14, 62], [86, 60], [30, 86], [70, 88], [50, 12], [50, 90]]
+        : [[12, 20], [88, 22], [9, 62], [91, 60], [26, 84], [74, 85], [33, 12], [67, 11]];
+      const itemsHost = document.getElementById('items');
+      ITEMS.forEach(([emoji, price], i) => {
+        const [x, y] = SPOTS[i];
+        const it = document.createElement('div');
+        it.className = 'item';
+        it.style.cssText = `--x:${x}%;--y:${y}%;--in:${2550 + i * 170}ms;--out:${4950 + i * 45}ms;--rot:${(i % 2 ? 1 : -1) * (5 + (i * 3) % 7)}deg`;
+        it.innerHTML = `<div class="item-inner"><div class="card">${emoji}<span class="sticker">${price}</span></div></div>`;
+        itemsHost.append(it);
+      });
+
+      // ---------- Bulbs around the frame ----------
+      const bulbHost = document.getElementById('bulbs');
+      const buildBulbs = () => {
+        const w = W(), h = H();
+        const inset = Math.min(w, h) * 0.028;
+        const gap = Math.min(w, h) * 0.05;
+        const pw = w - inset * 2, ph = h - inset * 2;
+        const nx = Math.round(pw / gap), ny = Math.round(ph / gap);
+        const pts = [];
+        for (let i = 0; i < nx; i++) pts.push([inset + (pw * i) / nx, inset]);
+        for (let i = 0; i < ny; i++) pts.push([inset + pw, inset + (ph * i) / ny]);
+        for (let i = 0; i < nx; i++) pts.push([inset + pw - (pw * i) / nx, inset + ph]);
+        for (let i = 0; i < ny; i++) pts.push([inset, inset + ph - (ph * i) / ny]);
+        bulbHost.style.setProperty('--n', pts.length);
+        bulbHost.innerHTML = pts.map(([x, y], i) =>
+          `<span class="bulb" style="left:${x}px;top:${y}px;--i:${i};--k:${i % 3}"></span>`).join('');
+      };
+      buildBulbs();
+
+      // ---------- Deterministic confetti ----------
+      // Every particle's position is a closed-form function of time, so any
+      // frame can be rendered directly (needed for frame-by-frame capture).
+      const canvas = document.getElementById('fx');
+      const ctx = canvas.getContext('2d');
+      const COLORS = ['#ffd23f', '#ff5a5f', '#4ade80', '#60a5fa', '#f472b6', '#fff6c9', '#fb8500'];
+      let seed = 7;
+      const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+
+      const bursts = [];
+      const burst = (t0, x, y, { count = 60, angle = -90, spread = 60, speed = 1, rain = false } = {}) => {
+        for (let i = 0; i < count; i++) {
+          const a = ((angle + (rand() - 0.5) * spread) * Math.PI) / 180;
+          const v = speed * (0.55 + rand() * 0.6);
+          bursts.push({
+            t0: t0 + (rain ? rand() * 900 : 0),
+            x: rain ? rand() : x,
+            y: rain ? -0.03 : y,
+            vx: rain ? (rand() - 0.5) * 0.2 : Math.cos(a) * v,
+            vy: rain ? rand() * 0.2 : Math.sin(a) * v,
+            w: 0.009 + rand() * 0.009,
+            h: 0.014 + rand() * 0.012,
+            rot: rand() * Math.PI,
+            vr: (rand() - 0.5) * 0.35,
+            flip: rand() * Math.PI,
+            vf: 0.08 + rand() * 0.18,
+            color: COLORS[(rand() * COLORS.length) | 0],
+            ttl: rain ? 200 : 110 + rand() * 60,
+            round: rand() < 0.2,
+          });
+        }
+      };
+
+      const logoY = portrait ? 0.38 : 0.34;
+      // Letters land -> cannons from the bottom corners.
+      burst(1720, 0.04, 1.02, { count: 90, angle: -62, spread: 26, speed: 0.034 });
+      burst(1720, 0.96, 1.02, { count: 90, angle: -118, spread: 26, speed: 0.034 });
+      burst(1720, 0.5, logoY, { count: 70, angle: -90, spread: 360, speed: 0.02 });
+      // Each listing pops out in a little sparkle.
+      SPOTS.forEach(([x, y], i) => burst(4990 + i * 45, x / 100, y / 100, { count: 16, spread: 360, speed: 0.012 }));
+      // Stamp slam.
+      burst(6300, 0.5, portrait ? 0.87 : 0.88, { count: 60, angle: -90, spread: 140, speed: 0.024 });
+      // Finale rain.
+      burst(6600, 0, 0, { count: 180, rain: true });
+
+      const K = -Math.log(0.986); // per-frame drag, in 60fps frames
+      const G = 0.00045;          // gravity, fraction of height per frame^2
+
+      const drawConfetti = (t) => {
+        const w = W(), h = H(), s = Math.min(w, h);
+        const dpr = window.devicePixelRatio || 1;
+        if (canvas.width !== Math.round(w * dpr)) {
+          canvas.width = Math.round(w * dpr);
+          canvas.height = Math.round(h * dpr);
+        }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        for (const p of bursts) {
+          const f = ((t - p.t0) / 1000) * 60;
+          if (f < 0 || f > p.ttl) continue;
+          const e = 1 - Math.exp(-K * f);
+          // Positions in units of the short side, so bursts look the same in any aspect.
+          const px = p.x * w + (p.vx / K) * e * s;
+          const py = p.y * h + ((p.vy / K) * e + (G / K) * f - (G / (K * K)) * e) * s;
+          if (py > h + 40) continue;
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, Math.min(1, (p.ttl - f) / 30));
+          ctx.translate(px, py);
+          ctx.rotate(p.rot + p.vr * f);
+          ctx.scale(1, Math.cos(p.flip + p.vf * f));
+          ctx.fillStyle = p.color;
+          const pw = p.w * s, ph = p.h * s;
+          if (p.round) {
+            ctx.beginPath();
+            ctx.arc(0, 0, pw / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.fillRect(-pw / 2, -ph / 2, pw, ph);
+          }
+          ctx.restore();
+        }
+      };
+
+      // ---------- Price tag spin (function of time) ----------
+      const tagPrice = document.getElementById('tag-price');
+      const JUNK = ['$5', '$1,800', '$25', '$450', '$69', '$900', '$12', '$220', '$1,200', '$35', '$350', '$100'];
+      const spin = (t, start, end) => {
+        // Ticks slow down toward the end, like a prize wheel.
+        const p = (t - start) / (end - start);
+        const ticks = Math.floor(22 * (1 - Math.pow(1 - p, 2.2)));
+        return JUNK[ticks % JUNK.length];
+      };
+      const tagText = (t) => {
+        if (t >= 2300 && t < 3700) return spin(t, 2300, 3700);
+        if (t >= 6700 && t < 7400) return spin(t, 6700, 7400);
+        return '$???';
+      };
+
+      // ---------- Timeline control ----------
+      // Every CSS animation is paused and scrubbed to the same clock.
+      let anims = [];
+      const render = (t) => {
+        for (const a of anims) a.currentTime = t;
+        const text = tagText(t);
+        if (tagPrice.textContent !== text) tagPrice.textContent = text;
+        drawConfetti(t);
+      };
+
+      const ready = document.fonts.load('1em Bungee').catch(() => {}).then(() => {
+        anims = document.getAnimations();
+        anims.forEach((a) => a.pause());
+        render(0);
+      });
+
+      window.promo = { DURATION, render, ready };
+
+      // Live preview loops; ?capture leaves the clock to the render script.
+      if (!new URLSearchParams(location.search).has('capture')) {
+        ready.then(() => {
+          const t0 = performance.now();
+          const loop = (now) => {
+            render((now - t0) % (DURATION + 600));
+            requestAnimationFrame(loop);
+          };
+          requestAnimationFrame(loop);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
