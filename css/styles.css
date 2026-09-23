@@ -41,14 +41,29 @@ html, body {
   margin-bottom: 24px;
 }
 
-.topbar h1 {
+.wordmark {
   margin: 0;
-  font-size: clamp(1.6rem, 4.5vw, 2.2rem);
-  letter-spacing: -0.02em;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  font-family: "Bungee", Impact, "Arial Black", sans-serif;
+  font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+  line-height: 1;
+  background: linear-gradient(180deg, #fffbe6 0%, var(--accent) 45%, #fb8500 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+body.is-intro .topbar { display: none; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .hud {
@@ -58,6 +73,8 @@ html, body {
   font-size: 0.95rem;
   color: var(--muted);
 }
+
+.hud b { color: var(--text); }
 
 .screen {
   background: var(--bg-alt);
@@ -192,8 +209,41 @@ button.primary:focus-visible { outline: 3px solid var(--accent-2); outline-offse
 }
 
 .reveal p { margin: 6px 0; }
-.reveal-actual strong { color: var(--accent); font-size: 1.2rem; }
-.reveal-points strong { color: var(--accent); }
+.reveal-points strong { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+.bids {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.bid {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+
+.bid-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.bid-value {
+  display: block;
+  font-family: "Bungee", Impact, "Arial Black", sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 5vw, 1.6rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.bid--actual .bid-value { color: var(--accent); }
 
 .reveal-verdict { font-weight: 600; }
 .reveal-verdict.good { color: var(--good); }
@@ -202,8 +252,10 @@ button.primary:focus-visible { outline: 3px solid var(--accent-2); outline-offse
 #next-btn { margin-top: 10px; }
 
 .final-score {
+  font-family: "Bungee", Impact, "Arial Black", sans-serif;
   font-size: 2.2rem;
   margin: 8px 0 4px;
+  font-variant-numeric: tabular-nums;
 }
 .final-score strong { color: var(--accent); }
 .final-score span { color: var(--muted); font-size: 1.2rem; }

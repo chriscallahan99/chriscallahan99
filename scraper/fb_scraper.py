@@ -1,4 +1,4 @@
-"""Facebook Marketplace scraper for Marketguessr.
+"""Facebook Marketplace scraper for Priced.
 
 *** READ scraper/README.md FIRST. ***
 
@@ -91,7 +91,7 @@ def existing_ids(listings: list[dict]) -> set[str]:
 def download_image(url: str, listing_id: str) -> Path | None:
     try:
         r = requests.get(url, timeout=15, headers={
-            "User-Agent": "Mozilla/5.0 (compatible; Marketguessr/0.1)",
+            "User-Agent": "Mozilla/5.0 (compatible; Priced/0.1)",
         })
         r.raise_for_status()
     except Exception as e:

@@ -3,34 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Marketguessr &mdash; Guess the Weird Marketplace Price</title>
+  <title>Priced &mdash; Guess the Weird Marketplace Price</title>
   <meta name="description" content="A Price Is Right-style game where you guess the asking price of genuinely weird Facebook Marketplace listings." />
+  <link rel="preload" href="fonts/bungee-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%B0%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/show.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%B7%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 </head>
-<body>
+<body class="is-intro">
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
   <main id="app">
 
     <header class="topbar">
-      <h1>Marketguessr</h1>
+      <p class="wordmark">Priced</p>
       <div class="hud">
         <span id="round-indicator" aria-live="polite">Round &mdash; / &mdash;</span>
-        <span id="score-indicator" aria-live="polite">Score: 0</span>
+        <span id="score-indicator">Score: <b id="score-value">0</b></span>
       </div>
     </header>
 
-    <section id="intro" class="screen">
-      <h2>How much would <em>you</em> pay for this nonsense?</h2>
-      <p>You&rsquo;ll see 10 genuinely weird Marketplace listings. Guess each price.
-      <strong>Price Is Right rules:</strong> closest without going over wins. Go over and you get zero.</p>
-      <button id="start-btn" type="button" class="primary">Start guessing</button>
-      <p class="fineprint">Images are placeholders unless someone has run the local scraper &mdash; see the repo README.</p>
+    <section id="intro" class="intro">
+      <div class="stage">
+        <div class="spots" aria-hidden="true">
+          <span class="spot spot-l"></span>
+          <span class="spot spot-r"></span>
+        </div>
+        <div class="marquee" id="marquee">
+          <div class="rays" aria-hidden="true"></div>
+          <div class="bulbs" id="bulbs" aria-hidden="true"></div>
+          <p class="kicker" aria-hidden="true">&#9733; Come on down &#9733;</p>
+          <div class="title-wrap">
+            <h1 class="title" id="title"><span class="sr-only">Priced</span></h1>
+            <button type="button" class="hero-tag" id="hero-tag" aria-label="Spin the price tag">
+              <span class="tag-pin"></span>
+              <span class="tag-string"></span>
+              <span class="tag-body">
+                <span class="tag-card"><span class="tag-hole"></span><span class="tag-price" id="hero-tag-price">$???</span></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-copy">
+        <h2 style="--d:0">How much would <em>you</em> pay for this nonsense?</h2>
+        <p style="--d:1">You&rsquo;ll see 10 genuinely weird Marketplace listings. Guess each price.
+        <strong>Price Is Right rules:</strong> closest without going over wins. Go over and you get zero.</p>
+        <button id="start-btn" type="button" class="primary big" style="--d:2">Start guessing</button>
+        <p class="fineprint" style="--d:3">Images are placeholders unless someone has run the local scraper &mdash; see the repo README.</p>
+      </div>
     </section>
 
     <section id="round" class="screen hidden" aria-labelledby="listing-title">
-      <article class="listing">
+      <article class="listing" id="listing-card">
         <div class="listing-image-wrap">
           <img id="listing-image" alt="" />
+          <span id="stamp" class="stamp" aria-hidden="true"></span>
         </div>
         <div class="listing-body">
           <h2 id="listing-title"></h2>
@@ -49,10 +78,19 @@
       </form>
 
       <div id="reveal" class="reveal hidden" aria-live="polite">
-        <p class="reveal-actual">Actual price: <strong id="actual-price"></strong></p>
-        <p id="reveal-verdict" class="reveal-verdict"></p>
-        <p class="reveal-points">Round points: <strong id="round-points"></strong></p>
-        <button id="next-btn" type="button" class="primary">Next listing &rarr;</button>
+        <div class="bids">
+          <div class="bid">
+            <span class="bid-label">Your bid</span>
+            <strong id="your-guess" class="bid-value"></strong>
+          </div>
+          <div class="bid bid--actual">
+            <span class="bid-label">Actual price</span>
+            <strong id="actual-price" class="bid-value"></strong>
+          </div>
+        </div>
+        <p id="reveal-verdict" class="reveal-verdict after"></p>
+        <p class="reveal-points after">Round points: <strong id="round-points">0</strong></p>
+        <button id="next-btn" type="button" class="primary after">Next listing &rarr;</button>
       </div>
     </section>
 
@@ -69,6 +107,7 @@
     </footer>
   </main>
 
+  <script src="js/fx.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>
